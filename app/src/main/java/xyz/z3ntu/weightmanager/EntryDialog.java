@@ -50,8 +50,8 @@ public class EntryDialog extends DialogFragment {
 
                         ((MainActivity) getActivity()).new CreateHttpRequestTask().execute(data);
 
-                        DataFragment.adapter.addItem(new DateWeightEntry(data.getDate(), data.getWeight()));
-                        DataFragment.adapter.notifyDataSetChanged();
+//                        DataFragment.adapter.addItem(new DateWeightEntry(data.getDate(), data.getWeight()));
+//                        DataFragment.adapter.notifyDataSetChanged();
                     }
                 });
         // Create the AlertDialog object and return it

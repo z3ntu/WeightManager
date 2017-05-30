@@ -12,15 +12,16 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
 import xyz.z3ntu.weightmanager.rest.WeightData
 import xyz.z3ntu.weightmanager.rest.WeightDataSend
 import java.util.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DataFragment.OnListFragmentInteractionListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DataFragment.OnListFragmentInteractionListener, View.OnLongClickListener {
 
-//    var urlbase = "http://10.91.52.89:8090"
+    // var urlbase = "http://10.91.52.89:8090"
     var urlbase = "http://192.168.0.12:8090"
 
     companion object {
@@ -117,7 +118,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    private inner class GetHttpRequestTask : AsyncTask<Void, Void, Array<WeightData>>() {
+    override fun onLongClick(p0: View?): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    inner class GetHttpRequestTask : AsyncTask<Void, Void, Array<WeightData>>() {
         override fun doInBackground(vararg params: Void): Array<WeightData> {
             println("WE ARE NOW DOING SOMETHING.")
             try {
@@ -157,8 +162,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 restTemplate.messageConverters.add(MappingJackson2HttpMessageConverter())
                 val success = restTemplate.postForObject(url, p0.first(), WeightData::class.java)
                 println(success)
-                DataFragment.adapter.addItem(DateWeightEntry(success.date, success.weight))
-                DataFragment.adapter.notifyDataSetChanged()
+                runOnUiThread({
+                    DataFragment.adapter.addItem(DateWeightEntry(success.date, success.weight))
+                    DataFragment.adapter.notifyDataSetChanged()
+                })
                 return true
             } catch (e: Exception) {
                 Log.e("MainActivity", e.message, e)
